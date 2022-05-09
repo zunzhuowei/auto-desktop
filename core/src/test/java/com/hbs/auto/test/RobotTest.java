@@ -1,6 +1,6 @@
 package com.hbs.auto.test;
 
-import com.hbs.auto.MKAutoKit;
+import com.hbs.auto.utils.MKAutoKit;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

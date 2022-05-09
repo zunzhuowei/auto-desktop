@@ -1,4 +1,4 @@
-package com.hbs.auto;
+package com.hbs.auto.utils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
