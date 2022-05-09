@@ -40,7 +40,7 @@ public class SuperPatrickTest {
 
         superpatrick.findElement("", "文件(F)", "", "MenuItem");
 
-        superpatrick.findElement("3", "保存(S)    Ctrl+S", "", "MenuItem");
+        superpatrick.findElement("3","保存(S)	Ctrl+S","","MenuItem");
 
         Thread.sleep(500);
 
