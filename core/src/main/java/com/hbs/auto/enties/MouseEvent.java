@@ -15,7 +15,7 @@ public class MouseEvent {
     /**
      * x坐标; y坐标; time 长摁鼠标的时间长度; awaitTime 等待要点击的目标图片出现的时间毫秒数
      */
-    public int x, y, time = 10, awaitTime = 5000;
+    public int x, y, time = 10, awaitTime = 0;
     /**
      * 要点击的图片所在位置，如：D://tem/aa.bmp
      */
@@ -42,6 +42,11 @@ public class MouseEvent {
         return of;
     }
 
+    /**
+     * @param time 点击次数
+     * @param picPath 要点击的图片所在位置，如：D://tem/aa.bmp ；不能包含中文字符
+     * @return
+     */
     public static MouseEvent of(int time, String picPath) {
         final MouseEvent of = MouseEvent.of(0, 0, time);
         of.picPath = picPath;
@@ -49,12 +54,23 @@ public class MouseEvent {
         return of;
     }
 
+    /**
+     *
+     * @param time 点击次数
+     * @param picPath 要点击的图片所在位置，如：D://tem/aa.bmp ；不能包含中文字符
+     * @param awaitTime 等待时间毫秒
+     * @return
+     */
     public static MouseEvent of(int time, String picPath, int awaitTime) {
         final MouseEvent of = MouseEvent.of(time, picPath);
         of.awaitTime = awaitTime;
         return of;
     }
 
+    /**
+     *
+     * @param picPath 要点击的图片所在位置，如：D://tem/aa.bmp ；不能包含中文字符
+     */
     public static MouseEvent of(String picPath) {
         final MouseEvent of = MouseEvent.of(0, 0);
         of.picPath = picPath;
@@ -62,6 +78,12 @@ public class MouseEvent {
         return of;
     }
 
+    /**
+     *
+     * @param picPath 要点击的图片所在位置，如：D://tem/aa.bmp ；不能包含中文字符
+     * @param awaitTime 等待时间毫秒
+     * @return
+     */
     public static MouseEvent of(String picPath, int awaitTime) {
         final MouseEvent of = MouseEvent.of(picPath);
         of.awaitTime = awaitTime;

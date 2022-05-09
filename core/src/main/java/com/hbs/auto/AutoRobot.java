@@ -3,18 +3,18 @@ package com.hbs.auto;
 import com.hbs.auto.constants.ClickPosition;
 import com.hbs.auto.constants.ClickType;
 import com.hbs.auto.enties.MouseEvent;
+import com.hbs.auto.utils.OpenCvUtils;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.opencv.opencv_java;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Created by zun.wei on 2022/5/9.
@@ -86,6 +86,15 @@ public class AutoRobot {
     }
 
     /**
+     * 鼠标点击一次
+     * @param type 点击类型，左键，中间，右键
+     * @param event 点击事件
+     */
+    public AutoRobot click(ClickType type, MouseEvent event) {
+        return click(type, event, 1);
+    }
+
+    /**
      * 鼠标点击
      *
      * @param type  点击类型，左键，中间，右键
@@ -101,8 +110,79 @@ public class AutoRobot {
         }
         // 点击图片
         else {
-
+            String bPic = "bPic_1_.bmp";
+            try {
+                if (event.awaitTime == 0) {
+                    final File screen = getScreen(bPic);
+                    final org.opencv.core.Point picInPic = OpenCvUtils.findPicInPic(event.picPath, screen.getPath());
+                    for (int i = 0; i < times; i++) {
+                        click(type, (int) picInPic.x, (int) picInPic.y, event.time);
+                    }
+                } else {
+                    final int awaitTime = event.awaitTime;
+                    final long timeMillis = System.currentTimeMillis();
+                    long endTime = timeMillis + awaitTime;
+                    while (true) {
+                        if (endTime < System.currentTimeMillis()) {
+                            break;
+                        }
+                        final File screen = getScreen(bPic);
+                        final org.opencv.core.Point picInPic = OpenCvUtils.findPicInPic(event.picPath, screen.getPath());
+                        if (Objects.isNull(picInPic)) {
+                            continue;
+                        }
+                        for (int i = 0; i < times; i++) {
+                            click(type, (int) picInPic.x, (int) picInPic.y, event.time);
+                        }
+                        break;
+                    }
+                }
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        return this;
+    }
+
+    /**
+     * 键盘输入，按下键值然后立刻弹出 如：KeyEvent.VK_A,KeyEvent.VK_B
+     *
+     * @param keys 键值
+     */
+    public AutoRobot keys(int... keys) {
+        for (int key : keys) {
+            this.robot.keyPress(key);
+            delay(10);
+            this.robot.keyRelease(key);
+        }
+        return this;
+    }
+
+    /**
+     * 组合键, 所有按键都按下之后再弹出；如：KeyEvent.VK_CONTROL，KeyEvent.VK_C
+     *
+     * @param keys 键值
+     */
+    public AutoRobot keysGroup(int... keys) {
+        for (int key : keys) {
+            this.robot.keyPress(key);
+        }
+        delay(10);
+        for (int key : keys) {
+            this.robot.keyRelease(key);
+        }
+        return this;
+    }
+
+    /**
+     * 文字输入
+     *
+     * @param words 文字
+     */
+    public AutoRobot write(String words) {
+        setClipboard(words);
+        delay(50);
+        keysGroup(KeyEvent.VK_CONTROL, KeyEvent.VK_V);
         return this;
     }
 
@@ -132,6 +212,38 @@ public class AutoRobot {
             robot.mouseRelease(MOUSE_RIGHT_BUTTON);
         }
         return this;
+    }
+
+    /**
+     * 获取剪贴板内容
+     */
+    public static String getClipboard() {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable content = clipboard.getContents(null);
+        if (content.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+            try {
+                return (String) content.getTransferData(DataFlavor.stringFlavor);
+            } catch (UnsupportedFlavorException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 提示音
+     */
+    public static void beep() {
+        Toolkit.getDefaultToolkit().beep();
+    }
+
+    /**
+     * 设置剪贴板
+     */
+    public static void setClipboard(String data) {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection selection = new StringSelection(data);
+        clipboard.setContents(selection, null);
     }
 
     /**
