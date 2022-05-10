@@ -44,6 +44,7 @@ public class OpenCvUtils {
      * @return
      */
     public static Point findPicInPic(String sPicPath, String bPicPath) throws InterruptedException {
+        System.out.println("sPicPath,bPicPath = " + sPicPath + "," + bPicPath);
         Mat sPic = Imgcodecs.imread(sPicPath);
         Mat bPic = Imgcodecs.imread(bPicPath);
         Mat result = Mat.zeros(bPic.rows() - sPic.rows() + 1, bPic.cols() - sPic.cols() + 1, CvType.CV_32FC1);

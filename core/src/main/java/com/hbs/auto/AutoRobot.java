@@ -6,6 +6,7 @@ import com.hbs.auto.enties.MouseEvent;
 import com.hbs.auto.utils.OpenCvUtils;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.opencv.opencv_java;
+import org.bytedeco.opencv.opencv_text.OCRTesseract;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -113,10 +114,14 @@ public class AutoRobot {
             String bPic = "bPic_1_.bmp";
             try {
                 if (event.awaitTime == 0) {
-                    final File screen = getScreen(bPic);
+                    final File screen = Objects.isNull(event.rectangle) ? getScreen(bPic) : getScreen(bPic, event.rectangle);
                     final org.opencv.core.Point picInPic = OpenCvUtils.findPicInPic(event.picPath, screen.getPath());
-                    for (int i = 0; i < times; i++) {
-                        click(type, (int) picInPic.x, (int) picInPic.y, event.time);
+                    if (Objects.nonNull(picInPic)) {
+                        for (int i = 0; i < times; i++) {
+                            click(type, (int) picInPic.x, (int) picInPic.y, event.time);
+                        }
+                    } else {
+                        System.out.println("not foud event = " + event.picPath);
                     }
                 } else {
                     final int awaitTime = event.awaitTime;
@@ -126,7 +131,7 @@ public class AutoRobot {
                         if (endTime < System.currentTimeMillis()) {
                             break;
                         }
-                        final File screen = getScreen(bPic);
+                        final File screen = Objects.isNull(event.rectangle) ? getScreen(bPic) : getScreen(bPic, event.rectangle);
                         final org.opencv.core.Point picInPic = OpenCvUtils.findPicInPic(event.picPath, screen.getPath());
                         if (Objects.isNull(picInPic)) {
                             continue;
@@ -139,6 +144,10 @@ public class AutoRobot {
                 }
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
+
+            } finally {
+                new File(bPic).deleteOnExit();
+                new File("res_1_.png").deleteOnExit();
             }
         }
         return this;
@@ -258,10 +267,7 @@ public class AutoRobot {
     public File getScreen(String name) throws IOException {
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         Rectangle screenRect = new Rectangle(d);
-        BufferedImage bufferedImage = robot.createScreenCapture(screenRect);
-        File file = new File(name);
-        ImageIO.write(bufferedImage, "bmp", file);
-        return file;
+        return getScreen(name, screenRect);
     }
 
     /**

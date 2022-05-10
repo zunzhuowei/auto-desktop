@@ -24,6 +24,16 @@ public class MouseEvent {
      * 点击位置
      */
     public ClickPosition clickPosition = ClickPosition.POINT;
+    /**
+     * 用于寻找小图的大图的矩形，默认是全屏，
+     */
+    public Rectangle rectangle;
+
+
+    public MouseEvent rectangle(Rectangle rectangle) {
+        this.rectangle = rectangle;
+        return this;
+    }
 
     public static MouseEvent of(int x, int y) {
         final MouseEvent mouseEvent = new MouseEvent();

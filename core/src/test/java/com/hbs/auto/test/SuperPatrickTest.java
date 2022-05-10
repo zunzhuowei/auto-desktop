@@ -4,8 +4,6 @@ import com.hbs.auto.SuperPatrickLibrary;
 import com.sun.jna.Native;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
-
 /**
  * Created by zun.wei on 2022/5/8.
  */
@@ -17,7 +15,7 @@ public class SuperPatrickTest {
         System.setProperty("jna.encoding", "GBK");
 
 
-        ClassPathResource classPathResource = new ClassPathResource("SuperPatrickLibrary.dll");
+        ClassPathResource classPathResource = new ClassPathResource("extralib/superpatrick/SuperPatrickLibrary.dll");
         final String path = classPathResource.getPath();
         String dllPath = path;//"C:/1/SuperPatrickLibrary.dll";
         SuperPatrickLibrary superpatrick = (SuperPatrickLibrary) Native.loadLibrary(dllPath, SuperPatrickLibrary.class);

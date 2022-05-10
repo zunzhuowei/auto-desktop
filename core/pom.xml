@@ -23,11 +23,17 @@
         </dependency>
         <dependency>
             <groupId>org.bytedeco</groupId>
-            <artifactId>javacv</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.bytedeco</groupId>
             <artifactId>javacv-platform</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>ffmpeg</artifactId>
+                    <groupId>org.bytedeco</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>ffmpeg-platform</artifactId>
+                    <groupId>org.bytedeco</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
