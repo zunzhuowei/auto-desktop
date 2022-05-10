@@ -1,8 +1,9 @@
 package com.hbs.auto.utils;
 
-import com.alibaba.fastjson.JSON;
 import com.hbs.auto.enties.AutoDesktopConf;
 import org.apache.commons.io.IOUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
@@ -19,8 +20,9 @@ public class AutoDesktopCfgUtils {
     public static List<AutoDesktopConf> getCfg(String cfgFileName) {
         ClassPathResource classPathResource = new ClassPathResource(cfgFileName);
         try (InputStream inputStream = classPathResource.getInputStream()) {
-            final String string = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-            return JSON.parseArray(string, AutoDesktopConf.class);
+            final Document document = Jsoup.parse(inputStream, "UTF-8", "");
+
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -28,6 +30,6 @@ public class AutoDesktopCfgUtils {
     }
 
     public static List<AutoDesktopConf> getCfg() {
-        return getCfg("auto.json");
+        return getCfg("auto.xml");
     }
 }

@@ -18,11 +18,6 @@ public class AutoDesktopApplication {
         final List<AutoDesktopConf> cfg = AutoDesktopCfgUtils.getCfg();
         AutoRobotHandler.handle(cfg);
 
-        AutoRobot.create()
-                .keysGroup(KeyEvent.VK_WINDOWS, KeyEvent.VK_D)
-                .delay(100)
-                .click(ClickType.RIGHT, MouseEvent.of("E:\\java\\IdeaProjects\\auto-desktop\\20220509210444.png", 5000), 1);
-
     }
 
 }
