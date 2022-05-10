@@ -6,6 +6,7 @@ https://github.com/bytedeco/javacpp-presets
 
 ## Use Samples
 * Position according to coordinates
+> com.hbs.auto.AutoDesktopTest
 ```html
         for (int i = 0; i < 5; i++) {
             AutoRobot.create()
@@ -30,6 +31,7 @@ https://github.com/bytedeco/javacpp-presets
 ```
 
 * Position according to the picture
+> com.hbs.auto.AutoDesktopTest2
 ```html
  AutoRobot.create()
                 .keysGroup(KeyEvent.VK_WINDOWS, KeyEvent.VK_D)
