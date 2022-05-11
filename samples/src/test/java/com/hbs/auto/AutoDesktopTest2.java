@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class AutoDesktopTest2 {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main2(String[] args) throws InterruptedException {
         AutoRobot.create()
                 .keysGroup(KeyEvent.VK_WINDOWS, KeyEvent.VK_D)
                 .delay(1000)
@@ -29,14 +29,14 @@ public class AutoDesktopTest2 {
                 .click(ClickType.LEFT,MouseEvent.of("C:\\Users\\hui\\Desktop\\temp\\smlj.png"));
     }
 
-    public static void main2(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         AutoRobot.create()
                 .keysGroup(KeyEvent.VK_WINDOWS, KeyEvent.VK_D)
                 .delay(1000);
         //final File screen = AutoRobot.create().getScreen("dekAutoPic.bmp", new Rectangle(500, 100, 200, 200));
         final File screen = AutoRobot.create().getScreen("dekAutoPic.bmp");
         final String path = screen.getPath();
-        OpenCvUtils.findSmallInLarger("C:\\Users\\hui\\Desktop\\temp\\gj.png", path);
+        OpenCvUtils.findSmallInLarger("C:\\Users\\hui\\Desktop\\temp\\wx_search.png", path);
         //OpenCvUtils.findSmallInLarger("E:\\java\\IdeaProjects\\DekAuto4J\\test.png", path);
 
     }

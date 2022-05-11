@@ -48,11 +48,9 @@ public class OpenCvUtils {
         Mat sPic = Imgcodecs.imread(sPicPath);
         Mat bPic = Imgcodecs.imread(bPicPath);
         Mat result = Mat.zeros(bPic.rows() - sPic.rows() + 1, bPic.cols() - sPic.cols() + 1, CvType.CV_32FC1);
-        Thread.sleep(20);
         Imgproc.matchTemplate(sPic, bPic, result, Imgproc.TM_SQDIFF_NORMED);
         //规格化
         Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1);
-        Imgcodecs.imwrite(OpenCvUtils.filePath + "\\res_1_.png", bPic);
 
         //获得最可能点，MinMaxLocResult是其数据格式，包括了最大、最小点的位置x、y
         Core.MinMaxLocResult mlr = Core.minMaxLoc(result);
@@ -61,6 +59,9 @@ public class OpenCvUtils {
             return null;
         }
         Point matchLoc = mlr.minLoc;
+        Imgproc.rectangle(bPic, matchLoc, new Point(matchLoc.x + sPic.width(), matchLoc.y + sPic.height()), new Scalar(0, 0, 255), 2);
+        Imgcodecs.imwrite(OpenCvUtils.filePath + "\\res_1_.png", bPic);
+
         System.out.println(mlr.minVal);
         System.out.println(mlr.maxVal);
         System.out.println("左上坐标：" + "[" + matchLoc.x + "," + matchLoc.y + "]");
