@@ -109,6 +109,11 @@
                 <version>1.13.1</version>
             </dependency>
             <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>3.0.5</version>
+            </dependency>
+            <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <!-- groovy-all 包含所有groovy GDK 中的包,
                  groovy 只包含基础 Groovy 编译需要的包-->

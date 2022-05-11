@@ -1,8 +1,11 @@
 package com.hbs.auto
 
-
+import com.alibaba.excel.EasyExcel
+import com.alibaba.excel.read.listener.PageReadListener
 import com.hbs.auto.constants.ClickType
 import com.hbs.auto.enties.MouseEvent
+import com.hbs.auto.enties.ReadModel
+import com.hbs.auto.utils.GroovyAutoBuildClassUtils
 import org.apache.commons.lang3.StringUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -10,6 +13,9 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
 import java.awt.event.KeyEvent
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicLong
+import java.util.function.Consumer
 import java.util.stream.Collectors
 
 /**
@@ -24,6 +30,7 @@ class AutoDesktopCfgHandler {
             Elements rootTasks = document.getElementsByTag("tasks");
             String loop = rootTasks.attr("loop")
             Long loopTimes = rootTasks.attr("times") ? rootTasks.attr("times") as Long : 1L
+            AtomicInteger count = new AtomicInteger(0)
             do {
                 Elements tasks = document.getElementsByTag("task");
                 for (Element task : tasks) {
@@ -89,8 +96,31 @@ class AutoDesktopCfgHandler {
                         }
                         // 输入文本
                         if (actionType == "write") {
-                            def text = action.text()
-                            autoRobot.write(text)
+                            Elements excelEle = action.getElementsByTag("excel")
+                            if(Objects.isNull(excelEle) || excelEle.isEmpty()) {
+                                def text = action.text()
+                                autoRobot.write(text)
+                            }
+                            // 读取 excel 文本
+                            else {
+                                Elements pathEle = excelEle.get(0).getElementsByTag("path")
+                                Elements sheetNumEle = excelEle.get(0).getElementsByTag("sheetNum")
+                                Elements columnNumEle = excelEle.get(0).getElementsByTag("columnNum")
+                                Elements startRowNumEle = excelEle.get(0).getElementsByTag("startRowNum")
+                                Elements stepOverNumEle = excelEle.get(0).getElementsByTag("stepOverNum")
+
+                                String fileName = pathEle.text();
+                                // 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
+                                // 这里每次会读取3000条数据 然后返回过来 直接调用使用数据就行
+                                Integer increment = count.getAndIncrement()
+                                EasyExcel.read(fileName,
+                                        null,
+                                        new PageReadListener<>((dataList) -> {
+                                            for (Object demoData : dataList) {
+                                                println "demoData = $demoData"
+                                            }
+                                        })).sheet((sheetNumEle.text() as Integer) - 1).doRead();
+                            }
                         }
                         // 鼠标单击
                         if (actionType == "click") {

@@ -30,6 +30,10 @@
             <artifactId>groovy-all</artifactId>
             <type>pom</type>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
