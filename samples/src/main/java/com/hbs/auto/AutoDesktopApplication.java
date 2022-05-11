@@ -16,7 +16,6 @@ public class AutoDesktopApplication {
 
     public static void main(String[] args) {
         final List<AutoDesktopConf> cfg = AutoDesktopCfgUtils.getCfg();
-        AutoRobotHandler.handle(cfg);
 
     }
 
