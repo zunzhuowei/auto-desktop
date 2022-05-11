@@ -4,7 +4,7 @@ This is an automated desktop tool library
 
 https://github.com/bytedeco/javacpp-presets
 
-## Use Samples
+## Sample Api usage
 * Position according to coordinates
 > com.hbs.auto.AutoDesktopTest
 ```html
@@ -45,4 +45,62 @@ https://github.com/bytedeco/javacpp-presets
                 .click(ClickType.LEFT,MouseEvent.of("C:\\Users\\hui\\Desktop\\temp\\qllj.png"))
                 .delay(1000)
                 .click(ClickType.LEFT,MouseEvent.of("C:\\Users\\hui\\Desktop\\temp\\smlj.png"));
+```
+
+## Use the configuration example
+> auto.xml
+```html
+<tasks loop="true" times="5">
+    <task id="1" enable="true">
+        <action type="keysGroup" beforeDelay="" afterDelay="500">
+            <key>windows</key>
+            <key>d</key>
+        </action>
+        <action type="click" beforeDelay="" afterDelay="2000">
+            <type>1</type>
+            <times>2</times>
+            <position>(100,30)</position>
+        </action>
+        <action type="click" beforeDelay="" afterDelay="500">
+            <type>1</type>
+            <times>1</times>
+            <awaitTime>10000</awaitTime>
+            <position>C:\\Users\\hui\\Desktop\\temp\\wx_search.png</position>
+        </action>
+        <action type="keysGroup" beforeDelay="" afterDelay="1000">
+            <key>CONTROL</key>
+            <key>a</key>
+        </action>
+        <action type="keys" beforeDelay="" afterDelay="500">
+            <key>back_space</key>
+        </action>
+        <action type="keys" beforeDelay="" afterDelay="500">
+            <key>a</key>
+            <key>SPACE</key>
+            <key>b</key>
+            <key>SPACE</key>
+            <key>c</key>
+            <key>SPACE</key>
+        </action>
+        <!-- TODO 读取 excel 数据 -->
+        <action type="write" beforeDelay="" afterDelay="500">
+            hello world ！
+        </action>
+    </task>
+</tasks>
+
+<!--
+ keysGroup -> 多个按键都按下后，再弹出；
+ keys -> 按键按下后即弹出；
+ click -> 鼠标点击；type(1,2,3) -> 左，中，右键；times 点击次数；position 点击坐标（x,y）/图片所在地址目录;awaitTime 等待图片出现的时间（毫秒）
+ write -> 输入的文本
+ beforeDelay -> 延时多久才开始执行这个动作（单位毫秒）
+ afterDelay ->  执行这个动作之后延时多久再继续（单位毫秒）
+
+ win -> WINDOWS
+ 删除 -> BACK_SPACE
+ 回车 -> ENTER
+ 空格 -> SPACE
+ ctrl -> CONTROL
+ -->
 ```
