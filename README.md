@@ -82,25 +82,41 @@ https://github.com/bytedeco/javacpp-presets
             <key>c</key>
             <key>SPACE</key>
         </action>
-        <!-- TODO 读取 excel 数据 -->
         <action type="write" beforeDelay="" afterDelay="500">
-            hello world ！
+            <!-- 读取 excel 优先，如果没有 excel 标签，则读取 action 的文本-->
+            <excel>
+                <!-- excel 所在目录 -->
+                <path>C:\Users\hui\Desktop\ads_master.xlsx</path>
+                <!-- excel 第几个工作表 -->
+                <sheetNum>1</sheetNum>
+                <!-- excel 读取哪一列 -->
+                <columnNum>2</columnNum>
+                <!-- excel 读取起始行，如：从第一行开始，则值为1 -->
+                <startRowNum>1</startRowNum>
+                <!-- 读取步进数，如：起始行2，步进为2，则读取的行数为,（2,4,6...）；
+                起始行2，步进为1，则读取的行数为,（2,3,4...）；
+                起始行2，步进为0，则读取的行数为,（2,2,2...）-->
+                <stepOverNum>1</stepOverNum>
+            </excel>
+        </action>
+        <action type="write" beforeDelay="" afterDelay="500">
+             读取 excel 优先，如果没有 excel 标签，则读取 action 的文本
         </action>
     </task>
 </tasks>
 
-<!--
- keysGroup -> 多个按键都按下后，再弹出；
- keys -> 按键按下后即弹出；
- click -> 鼠标点击；type(1,2,3) -> 左，中，右键；times 点击次数；position 点击坐标（x,y）/图片所在地址目录;awaitTime 等待图片出现的时间（毫秒）
- write -> 输入的文本
- beforeDelay -> 延时多久才开始执行这个动作（单位毫秒）
- afterDelay ->  执行这个动作之后延时多久再继续（单位毫秒）
+        <!--
+         keysGroup -> 多个按键都按下后，再弹出；
+         keys -> 按键按下后即弹出；
+         click -> 鼠标点击；type(1,2,3) -> 左，中，右键；times 点击次数；position 点击坐标（x,y）/图片所在地址目录;awaitTime 等待图片出现的时间（毫秒）
+         write -> 输入的文本
+         beforeDelay -> 延时多久才开始执行这个动作（单位毫秒）
+         afterDelay ->  执行这个动作之后延时多久再继续（单位毫秒）
 
- win -> WINDOWS
- 删除 -> BACK_SPACE
- 回车 -> ENTER
- 空格 -> SPACE
- ctrl -> CONTROL
- -->
+         win -> WINDOWS
+         删除 -> BACK_SPACE
+         回车 -> ENTER
+         空格 -> SPACE
+         ctrl -> CONTROL
+         -->
 ```

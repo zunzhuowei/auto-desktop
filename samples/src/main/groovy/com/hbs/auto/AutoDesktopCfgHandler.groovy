@@ -4,8 +4,6 @@ import com.alibaba.excel.EasyExcel
 import com.alibaba.excel.read.listener.PageReadListener
 import com.hbs.auto.constants.ClickType
 import com.hbs.auto.enties.MouseEvent
-import com.hbs.auto.enties.ReadModel
-import com.hbs.auto.utils.GroovyAutoBuildClassUtils
 import org.apache.commons.lang3.StringUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -13,9 +11,8 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
 import java.awt.event.KeyEvent
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicLong
-import java.util.function.Consumer
 import java.util.stream.Collectors
 
 /**
@@ -23,6 +20,10 @@ import java.util.stream.Collectors
  *
  */
 class AutoDesktopCfgHandler {
+
+
+    private static final Map<String, List<Object>> excelDatasMap = new ConcurrentHashMap<>()
+
 
     static void handle(String cfgFileName) {
         try (FileInputStream inputStream = new FileInputStream(new File(cfgFileName))) {
@@ -97,7 +98,7 @@ class AutoDesktopCfgHandler {
                         // 输入文本
                         if (actionType == "write") {
                             Elements excelEle = action.getElementsByTag("excel")
-                            if(Objects.isNull(excelEle) || excelEle.isEmpty()) {
+                            if (Objects.isNull(excelEle) || excelEle.isEmpty()) {
                                 def text = action.text()
                                 autoRobot.write(text)
                             }
@@ -112,14 +113,37 @@ class AutoDesktopCfgHandler {
                                 String fileName = pathEle.text();
                                 // 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
                                 // 这里每次会读取3000条数据 然后返回过来 直接调用使用数据就行
-                                Integer increment = count.getAndIncrement()
-                                EasyExcel.read(fileName,
-                                        null,
-                                        new PageReadListener<>((dataList) -> {
-                                            for (Object demoData : dataList) {
-                                                println "demoData = $demoData"
-                                            }
-                                        })).sheet((sheetNumEle.text() as Integer) - 1).doRead();
+                                def get = count.get()
+                                Integer startRow = (startRowNumEle.text() as Integer) - 1
+                                if (startRow > get) {
+                                    count.set(startRow)
+                                }
+                                Integer increment = count.getAndSet(count.get() + (stepOverNumEle.text() as Integer))
+
+                                List<Object> excelDatas = excelDatasMap.get(fileName)
+                                if (Objects.isNull(excelDatas) || excelDatas.isEmpty()) {
+                                    excelDatas = new ArrayList<>()
+                                    EasyExcel.read(fileName,
+                                            null,
+                                            new PageReadListener<>((dataList) -> {
+                                                excelDatas.addAll(dataList)
+                                            })).sheet((sheetNumEle.text() as Integer) - 1).doRead();
+                                    excelDatasMap.put(fileName, excelDatas)
+                                }
+
+                                if (Objects.nonNull(excelDatas) && !excelDatas.isEmpty()) {
+                                    AtomicInteger readIndex = new AtomicInteger()
+                                    for (Object excelData : excelDatas) {
+                                        Integer idx = readIndex.getAndIncrement()
+                                        if (idx == increment) {
+                                            def data = excelDatas.get(idx)
+                                            def columnData = data.get((columnNumEle.text() as Integer) - 1) as String
+                                            //println "columnData = $columnData"
+                                            autoRobot.write(columnData)
+                                            break
+                                        }
+                                    }
+                                }
                             }
                         }
                         // 鼠标单击
@@ -167,6 +191,8 @@ class AutoDesktopCfgHandler {
             } while (loop == "true" && loopTimes > 0)
         } catch (IOException e) {
             e.printStackTrace();
+        } finally{
+            excelDatasMap.clear()
         }
     }
 
