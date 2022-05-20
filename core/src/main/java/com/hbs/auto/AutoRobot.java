@@ -313,7 +313,7 @@ public class AutoRobot {
     /**
      * 从剪切板获得图片。
      */
-    private Image getImageFromClipboard() throws Exception {
+    private static Image getImageFromClipboard() throws Exception {
         Clipboard sysc = Toolkit.getDefaultToolkit().getSystemClipboard();
         Thread.sleep(150);
         Transferable cc = sysc.getContents(null);
@@ -325,5 +325,18 @@ public class AutoRobot {
         return null;
     }
 
+
+    public static File getImageFromClipboard(String fileName) throws Exception {
+        Image image = getImageFromClipboard();
+        if (Objects.isNull(image)) {
+            return null;
+        }
+        BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = bufferedImage.createGraphics();
+        g.drawImage(image, null, null);
+        File file = new File(fileName);
+        ImageIO.write(bufferedImage, "jpeg", file);
+        return file;
+    }
 
 }
