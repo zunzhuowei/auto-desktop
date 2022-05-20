@@ -315,7 +315,7 @@ public class AutoRobot {
      */
     private static Image getImageFromClipboard() throws Exception {
         Clipboard sysc = Toolkit.getDefaultToolkit().getSystemClipboard();
-        Thread.sleep(150);
+        Thread.sleep(200);
         Transferable cc = sysc.getContents(null);
         if (cc == null)
             return null;
@@ -335,7 +335,7 @@ public class AutoRobot {
         Graphics2D g = bufferedImage.createGraphics();
         g.drawImage(image, null, null);
         File file = new File(fileName);
-        ImageIO.write(bufferedImage, "jpeg", file);
+        ImageIO.write(bufferedImage, "bmp", file);
         return file;
     }
 
