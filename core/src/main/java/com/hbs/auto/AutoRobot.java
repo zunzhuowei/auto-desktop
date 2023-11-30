@@ -173,10 +173,14 @@ public class AutoRobot {
      * @param keys 键值
      */
     public AutoRobot keysGroup(int... keys) {
+        return keysGroup2(20, keys);
+    }
+
+    public AutoRobot keysGroup2(int delayTime, int... keys) {
         for (int key : keys) {
             this.robot.keyPress(key);
         }
-        delay(10);
+        delay(delayTime);
         for (int key : keys) {
             this.robot.keyRelease(key);
         }
