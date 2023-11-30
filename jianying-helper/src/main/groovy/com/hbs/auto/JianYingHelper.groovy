@@ -13,6 +13,11 @@ import org.bytedeco.javacpp.BytePointer
 import org.bytedeco.leptonica.PIX
 import org.bytedeco.tesseract.TessBaseAPI
 
+import java.awt.AWTException
+import java.awt.Image
+import java.awt.SystemTray
+import java.awt.Toolkit
+import java.awt.TrayIcon
 import java.awt.event.KeyEvent
 import java.util.concurrent.TimeUnit
 
@@ -52,7 +57,7 @@ class JianYingHelper implements NativeKeyListener,
         if (button == 2 && count == 1) {
             //AutoRobot.create().keysGroup(KeyEvent.VK_CONTROL, KeyEvent.VK_V);
             AutoRobot.create()
-                    .keysGroup2(100, KeyEvent.VK_ALT, KeyEvent.VK_TAB)
+                    .keysGroup2(200, KeyEvent.VK_ALT, KeyEvent.VK_TAB)
         }
         if (button == 3 && count == 1) {
             //AutoRobot.create().keysGroup(KeyEvent.VK_ALT, KeyEvent.VK_TAB)
@@ -115,12 +120,16 @@ class JianYingHelper implements NativeKeyListener,
                 outText = api.GetUTF8Text();
                 System.out.println("OCR output:\n" + outText.getString());
                 final String content = outText.getString();
+                //回车转逗号分割
                 String c = RegExUtils.replaceAll(content, "[\n]", ",");
                 c = c.substring(0, c.length() - 1)
                 // Destroy used object and release memory
                 outText.deallocate();
                 pixDestroy(image);
+                //写入粘贴板
                 AutoRobot.setClipboard(c);
+                //调用windows系统提示展示结果
+                //displayTray(c)
 
                 if (++idx > Long.MAX_VALUE) {
                     break;
@@ -136,5 +145,20 @@ class JianYingHelper implements NativeKeyListener,
         api.End();
     }
 
+    static void displayTray(String text) throws AWTException {
+        //Obtain only one instance of the SystemTray object
+        SystemTray tray = SystemTray.getSystemTray();
+        //If the icon is a file
+        Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
+        //Alternative (if the icon is on the classpath):
+        //Image image = Toolkit.getDefaultToolkit().createImage(getClass().getResource("icon.png"));
+        TrayIcon trayIcon = new TrayIcon(image, "Tray Demo");
+        //Let the system resize the image if needed
+        trayIcon.setImageAutoSize(true);
+        //Set tooltip text for the tray icon
+        trayIcon.setToolTip("System tray icon demo");
+        tray.add(trayIcon);
+        trayIcon.displayMessage("转换结果", text, TrayIcon.MessageType.INFO);
+    }
 
 }
