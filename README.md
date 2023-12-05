@@ -3,6 +3,17 @@ This is an automated desktop tool library
 
 
 https://github.com/bytedeco/javacpp-presets
+## git 提交脚本
+```html
+@echo off
+chcp 65001
+set /p var=请输入提交内容描述：
+git pull
+git add .
+git commit -m"%var%"
+git push
+pause
+```
 
 ## Sample Api usage
 * Position according to coordinates
