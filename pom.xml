@@ -11,6 +11,7 @@
         <module>core</module>
         <module>samples</module>
         <module>jianying-helper</module>
+        <module>adb-test</module>
     </modules>
     <packaging>pom</packaging>
 
